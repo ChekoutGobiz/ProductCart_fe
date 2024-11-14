@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KuyJajan - Product Slider</title>
+  <title>Gobiz - Product Slider</title>
 
   <!-- Swiper CSS -->
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
@@ -15,67 +15,161 @@
 </head>
 
 <style>
-  footer {
-    background-color: #24282c;
-    color: #fff;
-    padding: 40px 0;
+  body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
   }
 
-  .footer-container {
+  header {
+    background-color: #262a2d;
+    color: white;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
-    gap: 40px;
-    padding: 20px;
-  }
-  
-  .footer-contact, .footer-social {
-    width: 45%;
+    align-items: center;
   }
 
-  .footer-contact h3, .footer-social h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-    color: black;
+  header .logo img {
+    width: 120px;
+    height: auto;
   }
 
-  .contact-info, .social-icons {
+  ul.navbar {
     list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
     padding: 0;
   }
 
-  .contact-info li, .social-icons li {
-    margin-bottom: 10px;
-    font-size: 1rem;
-  }
-
-  .contact-info li i, .social-icons li i {
-    color: black;
-    margin-right: 8px;
-  }
-
-  .social-icons li a {
-    color: black;
+  ul.navbar li a {
     text-decoration: none;
+    color: white;
+    font-weight: 500;
     transition: color 0.3s;
   }
 
-  .social-icons li a:hover {
-    color: black;
+  ul.navbar li a:hover,
+  ul.navbar li a.active {
+    color: #ffc107;
   }
 
-  .footer-bottom {
+  .product-section h2 {
     text-align: center;
-    padding: 15px 0;
-    margin-top: 30px;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 20px;
+    color: #343a40;
   }
+
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .product-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .product-card h3 {
+    margin: 15px 10px 5px;
+    font-size: 1.2rem;
+    color: #343a40;
+  }
+
+  .product-card p {
+    margin: 0 10px 10px;
+    font-size: 0.9rem;
+    color: #6c757d;
+  }
+
+  .price {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 10px 10px;
+    font-size: 1rem;
+  }
+
+  .discount-price {
+    color: #dc3545;
+    font-weight: bold;
+  }
+
+  .original-price {
+    text-decoration: line-through;
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+
+  .add-to-cart {
+    background-color: #ffc107;
+    color: #343a40;
+    border: none;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+
+  .add-to-cart:hover {
+    background-color: #e0a800;
+  }
+
+  footer {
+    margin-top: 40px;
+  }
+
+  .icon-item {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .cart-notification {
+    position: absolute;
+    top: -2px;  /* Posisikan sedikit di atas ikon */
+    right: -2px; /* Posisikan sedikit ke kanan ikon */
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    padding: 3px 6px; /* Ukuran notifikasi lebih kecil */
+    font-size: 12px;  /* Ukuran font lebih kecil */
+    font-weight: bold;
+    min-width: 20px; /* Lebar minimum lebih kecil */
+    text-align: center;
+    display: none; /* Menyembunyikan notifikasi jika kosong */
+    z-index: 10;
+  }
+  
+  
+  
 </style>
 
 <body>
 
  <!-- Header -->
  <header>
-   <a href="index.html" class="logo"><img src="img/logo kuyjajan.jpg" alt="KuyJajan Logo"></a>
+   <a href="index.html" class="logo"><img src="img/logo.webp" alt="Gobiz Logo"></a>
    <ul class="navbar">
      <li><a href="index.html">Home</a></li>
      <li><a href="about.html">Region</a></li>
@@ -96,7 +190,7 @@
     <!-- Icon Keranjang -->
     <div class="icon-item" style="position: relative; display: inline-block; margin-left: 20px;">
       <a href="cart.html"><i class="ri-shopping-cart-line"></i></a>
-      <span class="cart-count">0</span>
+      <span class="cart-notification">0</span> <!-- Notifikasi Keranjang -->
     </div>
   </div>
  </header>
@@ -152,7 +246,6 @@
       products.forEach(product => {
         const productCard = `
           <div class="product-card">
-            <span class="label sale">Sale</span>
             <img src="${product.image}" alt="${product.name}">
             <h3>${product.name}</h3>
             <p>${product.description}</p>
@@ -188,11 +281,20 @@
     }
 
     // Perbarui jumlah item di keranjang
-    function updateCartCount() {
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
-      cartCount.textContent = cart.length;
-    }
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem('cart')) || [];
+  const cartNotification = document.querySelector('.cart-notification');
 
+  // Update jumlah di notifikasi
+  cartNotification.textContent = cart.length > 99 ? '99+' : cart.length; 
+
+  // Menampilkan atau menyembunyikan notifikasi tergantung pada jumlah produk
+  cartNotification.style.display = cart.length > 0 ? 'inline-block' : 'none';
+}
+
+
+
+    
     // Inisialisasi
     displayProducts();
     updateCartCount();
