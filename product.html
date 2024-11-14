@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KuyJajan - Product Slider</title>
+
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+</head>
+
+<style>
+  footer {
+    background-color: #24282c;
+    color: #fff;
+    padding: 40px 0;
+  }
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding: 20px;
+  }
+  
+  .footer-contact, .footer-social {
+    width: 45%;
+  }
+
+  .footer-contact h3, .footer-social h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: black;
+  }
+
+  .contact-info, .social-icons {
+    list-style: none;
+    padding: 0;
+  }
+
+  .contact-info li, .social-icons li {
+    margin-bottom: 10px;
+    font-size: 1rem;
+  }
+
+  .contact-info li i, .social-icons li i {
+    color: black;
+    margin-right: 8px;
+  }
+
+  .social-icons li a {
+    color: black;
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .social-icons li a:hover {
+    color: black;
+  }
+
+  .footer-bottom {
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+</style>
+
+<body>
+
+ <!-- Header -->
+ <header>
+   <a href="index.html" class="logo"><img src="img/logo kuyjajan.jpg" alt="KuyJajan Logo"></a>
+   <ul class="navbar">
+     <li><a href="index.html">Home</a></li>
+     <li><a href="about.html">Region</a></li>
+     <li><a href="product.html" class="active">Product</a></li>
+     <li><a href="cart.html">Cart</a></li>
+   </ul>    
+   <div class="icons-item">
+    <!-- Icon Pencarian -->
+    <div class="icon-item" style="position: relative; display: inline-block;">
+      <a href="#" id="search-icon"><i class="ri-search-line"></i></a>
+      <span>Search</span>
+      <!-- Kolom Pencarian -->
+      <div id="search-container" style="display: none; position: absolute; left: 0; top: 30px;">
+        <input type="text" placeholder="Search here..." id="search-box" style="padding: 5px; width: 200px;">
+      </div>
+    </div>
+  
+    <!-- Icon Keranjang -->
+    <div class="icon-item" style="position: relative; display: inline-block; margin-left: 20px;">
+      <a href="cart.html"><i class="ri-shopping-cart-line"></i></a>
+      <span class="cart-count">0</span>
+    </div>
+  </div>
+ </header>
+
+ <!-- Product Grid Section -->
+ <section class="product-section">
+  <div class="container">
+      <h2>Produk Tersedia</h2>
+      <div id="product-grid" class="product-grid">
+          <!-- Produk akan ditambahkan melalui JavaScript -->
+      </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-contact">
+      <h3>Contact Us</h3>
+      <ul class="contact-info">
+        <li><i class="ri-map-pin-2-fill"></i> Jl. Merdeka No.123, Bandung, Indonesia</li>
+        <li><i class="ri-mail-fill"></i> info@kuyjajan.com</li>
+        <li><i class="ri-phone-fill"></i> +62 856-2448-2521</li>
+      </ul>
+    </div>
+    <div class="footer-social">
+      <h3>Follow Us</h3>
+      <ul class="social-icons">
+        <li><a href="#"><i class="ri-facebook-circle-fill"></i> Facebook</a></li>
+        <li><a href="#"><i class="ri-instagram-fill"></i> Instagram</a></li>
+        <li><a href="#"><i class="ri-twitter-fill"></i> Twitter</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<!-- JavaScript -->
+<script>
+  const products = [
+      { id: 1, name: 'Batagor', image: 'img/batagor.png', description: 'Bakso tahu goreng khas Bandung.', discountPrice: 25000, originalPrice: 50000 },
+      { id: 2, name: 'Seblak', image: 'img/seblak.jpg', description: 'Seblak Khas Bandung.', discountPrice: 20000, originalPrice: 40000 },
+      { id: 3, name: 'Ketoprak', image: 'img/ketoprak.jpg', description: 'Ketoprak Jakarta.', discountPrice: 25000, originalPrice: 50000 },
+      { id: 4, name: 'Gudeg', image: 'img/gudeg.jpg', description: 'Gudeg khas Yogyakarta.', discountPrice: 30000, originalPrice: 60000 }
+  ];
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const productGrid = document.getElementById('product-grid');
+    const cartCount = document.querySelector('.cart-count');
+
+    // Tampilkan produk
+    function displayProducts() {
+      productGrid.innerHTML = '';
+      products.forEach(product => {
+        const productCard = `
+          <div class="product-card">
+            <span class="label sale">Sale</span>
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>${product.description}</p>
+            <div class="price">
+              <span class="discount-price">Rp.${product.discountPrice}</span>
+              <span class="original-price">Rp.${product.originalPrice}</span>
+            </div>
+            <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.discountPrice}">+ Add</button>
+          </div>
+        `;
+        productGrid.insertAdjacentHTML('beforeend', productCard);
+      });
+
+      // Tambahkan event listener ke tombol "Add"
+      const addToCartButtons = document.querySelectorAll('.add-to-cart');
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+          const id = e.target.dataset.id;
+          const name = e.target.dataset.name;
+          const price = e.target.dataset.price;
+
+          addToCart({ id, name, price });
+        });
+      });
+    }
+
+    // Tambahkan produk ke keranjang
+    function addToCart(product) {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cart.push(product);
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    // Perbarui jumlah item di keranjang
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      cartCount.textContent = cart.length;
+    }
+
+    // Inisialisasi
+    displayProducts();
+    updateCartCount();
+  });
+</script>
+
+</body>
+</html>
