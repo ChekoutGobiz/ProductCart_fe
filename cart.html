@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KuyJajan - Cart</title>
+  <title>Gobiz - Cart</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -84,18 +84,26 @@
       color: #6c757d;
     }
 
-    .cart-item .remove-btn {
-      background-color: #dc3545;
-      color: #fff;
-      padding: 8px 15px;
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quantity-controls button {
+      background-color: #ffc107;
+      color: #343a40;
       border: none;
+      padding: 5px 10px;
       border-radius: 5px;
       cursor: pointer;
       font-size: 0.9rem;
+      font-weight: bold;
+      transition: background-color 0.3s;
     }
 
-    .cart-item .remove-btn:hover {
-      background-color: #c82333;
+    .quantity-controls button:hover {
+      background-color: #e0a800;
     }
 
     .total {
@@ -112,7 +120,8 @@
       margin-top: 20px;
     }
 
-    .btn-back {
+    .btn-back,
+    .btn-checkout {
       display: block;
       text-align: center;
       margin-top: 20px;
@@ -127,6 +136,15 @@
       margin-right: auto;
     }
 
+    .btn-checkout {
+      background-color: #28a745;
+      margin-top: 10px;
+    }
+
+    .btn-checkout:hover {
+      background-color: #218838;
+    }
+
     .btn-back:hover {
       background-color: #e0a800;
     }
@@ -134,7 +152,7 @@
 </head>
 <body>
   <header>
-    <a href="index.html" class="logo">KuyJajan</a>
+    <a href="index.html" class="logo">Gobiz</a>
     <nav>
       <a href="index.html">Home</a>
       <a href="product.html">Product</a>
@@ -147,22 +165,38 @@
     <div id="cart-items"></div>
     <p class="total" id="cart-total">Total: Rp.0</p>
     <a href="product.html" class="btn-back">Kembali Belanja</a>
+    <a href="checkout.html" class="btn-checkout" id="checkout-btn">Checkout</a>
   </section>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const cartItemsContainer = document.getElementById('cart-items');
       const cartTotalElement = document.getElementById('cart-total');
-      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const checkoutBtn = document.getElementById('checkout-btn');
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // Pastikan setiap item memiliki quantity saat diambil dari localStorage
+      cart = cart.map(item => ({ ...item, quantity: item.quantity || 1 }));
 
       // Fungsi untuk menghitung total harga
       function calculateTotal() {
-        return cart.reduce((total, item) => total + parseInt(item.price), 0);
+        return cart.reduce((total, item) => total + item.price * item.quantity, 0);
       }
 
-      // Fungsi untuk menghapus item dari keranjang
-      function removeFromCart(index) {
-        cart.splice(index, 1);
+      // Fungsi untuk menambahkan jumlah produk
+      function increaseQuantity(index) {
+        cart[index].quantity += 1;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        renderCart();
+      }
+
+      // Fungsi untuk mengurangi jumlah produk
+      function decreaseQuantity(index) {
+        if (cart[index].quantity > 1) {
+          cart[index].quantity -= 1;
+        } else {
+          cart.splice(index, 1);
+        }
         localStorage.setItem('cart', JSON.stringify(cart));
         renderCart();
       }
@@ -174,8 +208,11 @@
         if (cart.length === 0) {
           cartItemsContainer.innerHTML = '<p class="empty-cart">Keranjang Anda kosong.</p>';
           cartTotalElement.textContent = 'Total: Rp.0';
+          checkoutBtn.style.display = 'none'; // Sembunyikan tombol checkout jika keranjang kosong
           return;
         }
+
+        checkoutBtn.style.display = 'block'; // Tampilkan tombol checkout jika ada item di keranjang
 
         cart.forEach((item, index) => {
           const cartItem = `
@@ -183,9 +220,14 @@
               <img src="img/${item.name.toLowerCase().replace(' ', '')}.jpg" alt="${item.name}">
               <div>
                 <h3>${item.name}</h3>
-                <p>Harga: Rp.${item.price}</p>
+                <p>Harga Satuan: Rp.${item.price}</p>
+                <p>Total Harga: Rp.${item.price * item.quantity}</p>
               </div>
-              <button class="remove-btn" data-index="${index}">Hapus</button>
+              <div class="quantity-controls">
+                <button class="decrease-btn" data-index="${index}">-</button>
+                <span>${item.quantity}</span>
+                <button class="increase-btn" data-index="${index}">+</button>
+              </div>
             </div>
           `;
           cartItemsContainer.insertAdjacentHTML('beforeend', cartItem);
@@ -193,12 +235,20 @@
 
         cartTotalElement.textContent = `Total: Rp.${calculateTotal()}`;
 
-        // Event listener untuk tombol hapus
-        const removeButtons = document.querySelectorAll('.remove-btn');
-        removeButtons.forEach(button => {
+        // Event listener untuk tombol tambah dan kurangi
+        const increaseButtons = document.querySelectorAll('.increase-btn');
+        increaseButtons.forEach(button => {
           button.addEventListener('click', (e) => {
             const index = e.target.dataset.index;
-            removeFromCart(index);
+            increaseQuantity(index);
+          });
+        });
+
+        const decreaseButtons = document.querySelectorAll('.decrease-btn');
+        decreaseButtons.forEach(button => {
+          button.addEventListener('click', (e) => {
+            const index = e.target.dataset.index;
+            decreaseQuantity(index);
           });
         });
       }
